@@ -7,6 +7,7 @@ import demo.bowling.alley.entities.Lane;
 import demo.bowling.alley.entities.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,8 @@ import java.util.concurrent.CompletableFuture;
 @Service
 public class BowlingService {
 
+    @Autowired
+    TicketCounterService ticketCounterService;
 
     @Async
     public CompletableFuture<Lane> start(Lane lane){
@@ -131,10 +134,9 @@ public class BowlingService {
             idx++;
             frame++;
         }while(frame<5);
+        // unassign lane
+        ticketCounterService.unAssignLane(lane.getLaneNo());
         System.out.println("GAME ENDS !!");
-
         return CompletableFuture.completedFuture(lane);
     }
-
-
 }
